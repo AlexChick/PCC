@@ -1,0 +1,1 @@
+num,name,test_array,is_winning11,Bob,"[10,20,30]",FALSE12,Jim,"[100,200,300]",FALSE13,Alex,,TRUE14,Ben,,TRUE15,Alex,100.200 300.400,TRUE16,Ben,100 200.300 400,TRUE17,Alex,,TRUE18,Ben,,TRUE19,Alex,,TRUE20,Ben,,TRUE

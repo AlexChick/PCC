@@ -30,17 +30,6 @@ def index(request):
     e.save()
     print("Event's score is {}. What's good, yo?!".format(e.score))
 
-    try:
-        import .update_in_Parse
-        update_in_Parse.main()
-        print("update_in_Parse worked!")
-    except:
-        print("update_in_Parse didn't work.")
-    print("Did the try block work?")
-
-
-
-
     return render(request, 'index.html')
 
 
@@ -52,4 +41,57 @@ def db(request):
     greetings = Greeting.objects.all()
 
     return render(request, 'db.html', {'greetings': greetings})
+
+
+def updateInParse(request):
+
+    try:
+        print("inside try block ok")
+        import .update_in_Parse
+        print("import worked")
+        update_in_Parse.main()
+        print("update_in_Parse worked!")
+    except:
+        print("update_in_Parse didn't work.")
+    print("Did the try block work?")
+
+    return render(request, 'update_in_Parse.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
