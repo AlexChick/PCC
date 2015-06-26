@@ -33,6 +33,7 @@ def index(request):
     try:
         import update_in_Parse
         update_in_Parse.main()
+        print("update_in_Parse worked!")
     except:
         print("update_in_Parse didn't work.")
 
