@@ -21,4 +21,69 @@ Parse.Cloud.define("makeTestEventObject", function(request, response) {
         }
     })
 });
-// yep
+
+
+
+
+
+Parse.Cloud.define("copy_Parse_class_into_Firebase", function(request, response) {
+    // Copy all objects in a given classname in Parse to Firebase.
+
+    var query = new Parse.Query("Question");
+    query.find({
+        success: function(results) {
+            response.success(results.length);
+        },
+        error: function() {
+            response.error("Question lookup failed");
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
