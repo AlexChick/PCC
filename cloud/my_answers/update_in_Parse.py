@@ -46,9 +46,9 @@ import requests
 import names # https://github.com/treyhunner/names
 
 # Import ParsePy stuff. ParsePy makes using Parse in Python much easier.
-from parse_rest.connection import ParseBatcher, register, SessionToken
-from parse_rest.datatypes import Function, Object, ACL
-from parse_rest.role import Role
+from parse_rest.connection import ParseBatcher, register#, SessionToken
+from parse_rest.datatypes import Function, Object#, ACL
+#from parse_rest.role import Role
 from parse_rest.user import User
 
 # Import my own modules.
