@@ -31,7 +31,7 @@ def index(request):
     print("Event's score is {}. What's good, yo?!".format(e.score))
 
     try:
-        import update_in_Parse
+        import .update_in_Parse
         update_in_Parse.main()
         print("update_in_Parse worked!")
     except:
