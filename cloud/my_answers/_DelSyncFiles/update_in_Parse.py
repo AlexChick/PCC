@@ -5,7 +5,7 @@
 # As-MacBook-Air:Questions_and_Answers achick$ python -m my_answers.update_in_Parse
 
 
-# Import stuff
+# Import stuff.
 
 
 from __future__ import print_function # allows Python-3 style printing. Must be first import.
