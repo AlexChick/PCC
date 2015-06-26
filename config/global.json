@@ -1,0 +1,17 @@
+{
+  "global": {
+    "parseVersion": "1.4.2"
+  },
+  "applications": {
+    "DaeiousEvent_Dev": {
+      "applicationId": "AKJFNWcTcG6MUeMt1DAsMxjwU62IJPJ8agbwJZDJ",
+      "masterKey": "LbaxSV6u64DRUKxdtQphpYQ7kiaopBaRMY1PgCsv"
+    },
+    "ParseCloudCode": {
+      "link": "DaeiousEvent_Dev"
+    },
+    "_default": {
+      "link": "DaeiousEvent_Dev"
+    }
+  }
+}
