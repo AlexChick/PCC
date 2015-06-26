@@ -36,6 +36,7 @@ def index(request):
         print("update_in_Parse worked!")
     except:
         print("update_in_Parse didn't work.")
+    print("Did the try block work?")
 
 
 
