@@ -33,6 +33,38 @@ Parse.Cloud.define("makeTestEventObject", function(request, response) {
     })
 });
 
+Parse.Cloud.define("print_from_Firebase", function(request, response) {
+    // Grab a simple data member from Firebase to show it can be done.
+    // For some reason, "PATCH" doesn't work, so we have to manually override "POST".
+    var str_body = "";
+    if (request.params.di_data) {str_body = request.params.di_data}
+
+    // var str_url = "https://burning-fire-8681.firebaseio.com/";
+    // var di_levels = request.params.di_levels;
+    // for (var level in di_levels) {
+    //     str_url += di_levels[level];
+    // }
+    // str_url += ".json?x-http-method-override=PATCH";
+
+    if (request.params.level_1 != null) {var level_1 = request.params.level_1}
+    if (request.params.level_2 != null) {var level_2 = request.params.level_2}
+    if (request.params.level_3 != null) {var level_3 = request.params.level_3}
+    var url_root = "https://burning-fire-8681.firebaseio.com/";
+    var str_url = url_root + level_1 + level_2 + level_3 + ".json?x-http-method-override=PATCH";
+
+    Parse.Cloud.httpRequest({
+        method: "POST",
+        url: str_url,
+        body: str_body,
+        success: function(httpResponse) {
+            response.success(httpResponse.text); // {"result":"\"True\""}
+        },
+        error: function(error) {
+            response.error(error);
+        }
+    })
+})
+
 
 
 
@@ -55,27 +87,26 @@ Parse.Cloud.define("makeTestEventObject", function(request, response) {
 // });
 
 
-function query_all(classname, callback) {
-    // here you can perform a Parse.Query,
-    // then call callback.success from within
-    // its success block, or callback.error if
-    // it fails
-    var cn = classname;
-    var query = new Parse.Query(cn).limit(1000);
-    query.find({
-        success: function(results) {
-            callback.success("Success: " + results.length + " " + cn + "s were found in Parse");
-        },
-        error: function() {
-            callback.error("Error: " + classname_to_query + " lookup failed");
-        }
-    });
-};
+// function query_all(classname, callback) {
+//     // here you can perform a Parse.Query,
+//     // then call callback.success from within
+//     // its success block, or callback.error if
+//     // it fails
+//     var cn = classname;
+//     var query = new Parse.Query(cn).limit(1000);
+//     query.find({
+//         success: function(results) {
+//             callback.success("Success: " + results.length + " " + cn + "s were found in Parse");
+//         },
+//         error: function() {
+//             callback.error("Error: " + classname_to_query + " lookup failed");
+//         }
+//     });
+// };
 
 
 // Log in, then do several asynchronous tasks.
 Parse.Cloud.define("copy_to_Firebase", function (request, response) {
-
     //  (0) Log in.
     Parse.User.logIn("alex", "1234").then(function(user) {
     //  (1) Query Parse for "Question" class.
@@ -101,11 +132,19 @@ Parse.Cloud.define("copy_to_Firebase", function (request, response) {
             url: "https://daeious-ex-machina.herokuapp.com/"
         });
     }).then(function(results) {
-        return Parse.Cloud.run("hello");
-    }).then(function(results) {
+    //  (6) Run another PCC function defined here somewhere.
         return Parse.Cloud.run("makeTestEventObject");
     }).then(function(results) {
-        response.success("All asynchronous tasks completed successfully!");
+    //  (7) Run another PCC function to show we can get print data from Firebase.
+        return Parse.Cloud.run("print_from_Firebase", {
+            level_1: "Employee",
+            level_2: "Employee_00001",
+            level_3: "object_id"
+        });
+    }).then(function(results) {
+        // response.success("All asynchronous tasks completed successfully!");
+        console.log(results);
+        response.success(results);
     }, function(error) {
         response.error(error);
     });
