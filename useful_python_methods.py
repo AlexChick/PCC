@@ -17,7 +17,7 @@ connection.request('POST', '/1/functions/print_from_Firebase', json.dumps({
         "level_3": "woo/",
 
         "di_data": 
-        			"{ \"key\": \"value\" \
+        			"{ \"keyp\": \"value\" \
         			}"
 
      }), {

@@ -33,6 +33,10 @@ Parse.Cloud.define("makeTestEventObject", function(request, response) {
     })
 });
 
+function gotData(data) {
+    console.log(data);
+}
+
 Parse.Cloud.define("print_from_Firebase", function(request, response) {
     // Grab a simple data member from Firebase to show it can be done.
     // For some reason, "PATCH" doesn't work, so we have to manually override "POST".
@@ -50,7 +54,7 @@ Parse.Cloud.define("print_from_Firebase", function(request, response) {
     if (request.params.level_2 != null) {var level_2 = request.params.level_2}
     if (request.params.level_3 != null) {var level_3 = request.params.level_3}
     var url_root = "https://burning-fire-8681.firebaseio.com/";
-    var str_url = url_root + level_1 + level_2 + level_3 + ".json?x-http-method-override=PATCH";
+    var str_url = url_root + level_1 + level_2 + level_3 + ".json?x-http-method-override=PATCH&callback=gotData";
 
     Parse.Cloud.httpRequest({
         method: "POST",
