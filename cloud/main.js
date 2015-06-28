@@ -1,23 +1,19 @@
 
 Parse.initialize("AKJFNWcTcG6MUeMt1DAsMxjwU62IJPJ8agbwJZDJ", "eyHtd5bpdJufw1JDinRBMNnFx2poEGJETHxAnzuV")
 
-// var Firebase = require("firebase.js");
-
-
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
 Parse.Cloud.define("hello", function(request, response) {
   response.success("Hello world!");
 });
 
-
+// Not sure how to use this.
 Parse.Cloud.define("Logger", function(request, response) {
   console.log(request.params);
   response.success();
 });
 
-
-
+// Connect to Heroku app, which runs a Python script that creates a test Event object.
 Parse.Cloud.define("makeTestEventObject", function(request, response) {
     // Set up to modify user data
     Parse.Cloud.httpRequest({
@@ -71,42 +67,113 @@ Parse.Cloud.define("print_from_Firebase", function(request, response) {
 
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// copy_from_Parse_to_Firebase
+// request.params:
+//          <e_serial>, the serial of this Event. (Ex: "000024")
+//          <classname>, a string of the Parse class for which we want to copy data into Firebase. (Ex: "Question")
+// (0) Log in.
+// (1) query_from_Parse(classname).
+// (2) convert_Parse_data_to_Firebase_data()
+// (2) update_in_Firebase(url, body).
+Parse.Cloud.define("copy_from_Parse_to_Firebase", function (request, response) {
+    // (0) Log in.
+    Parse.User.logIn("alex", "1234"
+    ).then( function (user) {
+        // (1) Query from Parse.
+        return Parse.Cloud.run("query_from_Parse", { 
+            classname : request.params.classname
+        });
+    }).then( function (results) {
+        // (2) Update in Firebase.
+        var di_object_dicts = {};
+        for (var i = 0; i < results.length; i++) {
+            var dict = {};
+            var li_attr = results[i].get("li_attr");
+            for (var j = 0; j < li_attr.length; j++) {
+                dict[li_attr[j]] = results[i].get(li_attr[j]);
+            }
+            // dict["num"] = results[i].get("num");
+            // dict["serial"] = results[i].get("serial");
+            // dict["ID"] = results[i].get("ID");
+            di_object_dicts[dict["ID"]] = dict;
+        };
+
+        str_di_object_dicts = JSON.stringify(di_object_dicts);
+
+        return Parse.Cloud.run("update_in_Firebase", {
+            e_serial : request.params.e_serial,
+            classname : request.params.classname,
+            str_didi : str_di_object_dicts
+        });
+    }).then( function (results) {
+        // (-1) Return.
+        response.success(results);
+    }, function (error) {
+        response.error(error);
+    });
+});
+
+// query_from_Parse
+Parse.Cloud.define("query_from_Parse", function (request, response) {
+    // Return a list of one dictionary for each Parse <classname> object, sorted by "num".
+    // request.params: 
+    //          <classname>, a string of the class to query from. Ex: "Question"
+    // response.success: 
+    //          <results>, a sorted list of dictionaries of Parse object attributes and values. Ex: [{},{},{}]
+    // FIX: Only gets first 1000 objects.
+    var query = new Parse.Query(request.params.classname).limit(1000).ascending("num");
+    query.find({
+        success: function (results) {
+            response.success(results);
+        }, error: function (error) {
+            response.error(error);
+        }
+    });
+});
+
+// update_in_Firebase
+Parse.Cloud.define("update_in_Firebase", function (request, response) {
+    // Return a message stating that everything was updated in Firebase.
+    // request.params:
+    //      <e_serial>, a string representing the data path to PATCH to. Ex: "https://burning-fire-8681.firebaseio.com/Event/Event_000001/Question"
+    //      <classname>, a string of the class to update in Firebase. Ex: "Question"
+    //      <body>, a dictionary of all data to update in Firebase. Ex: { "num": 1, ID: "Question_000001"} (quotes around keys are optional)
+    var e_serial = request.params.e_serial;
+    var classname = request.params.classname;
+    var str_didi = request.params.str_didi;
+
+    var url = "https://burning-fire-8681.firebaseio.com/";
+    if (classname.match("Question|IPad|EventUser|Config")) { // Should all classes be included in Event/Event_000001/ ?
+        url += "Event/Event_" + e_serial + "/" + classname + "/";
+    } else if (classname.match("User|Answer|Employee")) {
+        url += classname + "/";
+    }
+    url += ".json?x-http-method-override=PATCH";
+
+    Parse.Cloud.httpRequest({
+        method: "POST",
+        url: url,
+        body: str_didi,
+        success: function(httpResponse) {
+            response.success(httpResponse.text); // {"result":"\"True\""}
+        }, error: function(error) {
+            response.error(error);
+        }
+    });    
+});
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Parse.Cloud.define("copy_Parse_class_into_Firebase", function(request, response) {
-//     // Copy all objects in a given classname in Parse to Firebase.
 
-//     var query = new Parse.Query("Question");
-//     query.limit(1000);
-//     query.find({
-//         success: function(results) {
-//             response.success("Success -- " + results.length + " Questions were found in Parse");
-//         },
-//         error: function() {
-//             response.error("Question lookup failed");
-//         }
-//     });
-//     console.log("does this print?");
-
-// });
-
-
-// function query_all(classname, callback) {
-//     // here you can perform a Parse.Query,
-//     // then call callback.success from within
-//     // its success block, or callback.error if
-//     // it fails
-//     var cn = classname;
-//     var query = new Parse.Query(cn).limit(1000);
-//     query.find({
-//         success: function(results) {
-//             callback.success("Success: " + results.length + " " + cn + "s were found in Parse");
-//         },
-//         error: function() {
-//             callback.error("Error: " + classname_to_query + " lookup failed");
-//         }
-//     });
-// };
 
 
 // Log in, then do several asynchronous tasks.
@@ -154,17 +221,6 @@ Parse.Cloud.define("copy_to_Firebase", function (request, response) {
     });
 });
 
-    // Parse.Cloud.httpRequest({
-    //     url: 'https://daeious-ex-machina.herokuapp.com/',
-    //     success: function(httpResponse) {
-    //         console.log(httpResponse.text);
-    //         response.success("Test Event Object created successfully in Parse.");
-    //     },
-    //     error: function(httpResponse) {
-    //         console.error('Request failed with response code ' + httpResponse.response);
-    //         response.success("Oops.... something went wrong.");
-    //     }
-    // })
 
 
 
@@ -173,6 +229,48 @@ Parse.Cloud.define("copy_to_Firebase", function (request, response) {
 
 
 
+
+
+
+
+
+
+
+
+// Parse.Cloud.define("copy_Parse_class_into_Firebase", function(request, response) {
+//     // Copy all objects in a given classname in Parse to Firebase.
+
+//     var query = new Parse.Query("Question");
+//     query.limit(1000);
+//     query.find({
+//         success: function(results) {
+//             response.success("Success -- " + results.length + " Questions were found in Parse");
+//         },
+//         error: function() {
+//             response.error("Question lookup failed");
+//         }
+//     });
+//     console.log("does this print?");
+
+// });
+
+
+// function query_all(classname, callback) {
+//     // here you can perform a Parse.Query,
+//     // then call callback.success from within
+//     // its success block, or callback.error if
+//     // it fails
+//     var cn = classname;
+//     var query = new Parse.Query(cn).limit(1000);
+//     query.find({
+//         success: function(results) {
+//             callback.success("Success: " + results.length + " " + cn + "s were found in Parse");
+//         },
+//         error: function() {
+//             callback.error("Error: " + classname_to_query + " lookup failed");
+//         }
+//     });
+// };
 
 
 

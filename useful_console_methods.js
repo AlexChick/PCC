@@ -34,7 +34,14 @@ curl -X PUT \
 
 
 
+// add sample data into Firebase
 
+curl -X PUT -d '{
+  "alanisawesome": {
+    "name": "Alan Turing",
+    "birthday": "June 23, 1912"
+  }
+}' 'https://burning-fire-8681.firebaseio.com/BLARGH.json'
 
 
 

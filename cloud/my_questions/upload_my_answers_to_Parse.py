@@ -36,9 +36,9 @@ register("AKJFNWcTcG6MUeMt1DAsMxjwU62IJPJ8agbwJZDJ",
 Instance members of an _Answer():
 
     objectId
-    ID
     num
     serial
+    ID
     text
     image
     category
@@ -66,16 +66,29 @@ Instance members of an _Answer():
 
 Answer Tags:
 
-    1.1 = is_real
-    1.2 = is_fake
+    0 --> Can apply to any Category.
 
-    2.1 = has_bold
-    2.2 = has_italics
-    2.3 = has_underline
+    0.1 = has_bold
+    0.2 = has_italics
+    0.3 = has_underline
+    0.4 = has_copyright
+    0.5 = has_trademark
+    0.6 = is_real
+    0.7 = is_fake
+    0.8 = is_singular
+    0.9 = is_plural
 
-    3.1 = is_actor
-    3.2 = is_athlete
-    3.3 = is_musician
+    N --> Can only apply to Category N.
+
+    1.1 = is_male
+    1.2 = is_female
+    1.3 = is_actor
+    1.4 = is_athlete
+    1.5 = is_musician
+    1.6 = is_doing_something
+
+    4.1 = is_doing_something
+
 
 
 Answer Tenses:
@@ -170,7 +183,7 @@ class _Answer(Object):
     LI_FILENAMES = [
         "adjectives.txt", "animals.txt", "interjections.txt", "other.txt",
         "people.txt", "places.txt", "things.txt", "verbs.txt"
-        ]
+        ] 
     LI_ATTR = [
         "ID", "num", "serial", "text", "image", "category", "li_tags", "tense", 
         "syllables", "num_words", "num_chars", "li_q_serials", "str_q_serials",
@@ -179,9 +192,9 @@ class _Answer(Object):
 
     def __init__(self,
         objectId = "",
-        ID = "",
         num = 0,
         serial = "",
+        ID = "",
         text = "",
         image = "",
         category = "",

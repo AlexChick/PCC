@@ -34,12 +34,12 @@ register("AKJFNWcTcG6MUeMt1DAsMxjwU62IJPJ8agbwJZDJ",
 Instance members of a Question():
 
     objectId = String = "F*3ng3.rh" (from Parse)
-    ID = String = "Question_01234"
     num = Int = 1234
     serial = String = "01234"
+    ID = String = "Question_01234"
     text = String
     image = String = the URL where it lives
-    li_categories = [any of 1 2 3 4]
+    category = any of 1 2 3 4
     real_answer = String or None
     num_blanks = 0, 1, 2
     num_answers = 2-10
@@ -57,6 +57,10 @@ Question Categories:
     2 = statement
     3 = quote
     4 = lyrics
+
+Question Tags:
+
+
 
 
 # Answer Categories:
@@ -124,6 +128,11 @@ class _Question(Object):
     LIQ = [] # holds Questions
     LI_Q = [] # holds _Questions
     NUM = 1
+    LI_ATTR = [
+        "objectId", "num", "serial", "ID", "text", "image", "category", 
+        "real_answer", "num_blanks", "num_answers", "li_a_cats", "li_a_tenses", 
+        "li_a_serials", "str_a_cats", "str_a_tenses", "str_a_serials", "li_attr"
+        ]
 
     def __init__(self,
         objectId = "",
@@ -131,13 +140,17 @@ class _Question(Object):
         serial = "",
         ID = "",
         text = "",
-        img = "",
+        image = "",
         category = "",
+        real_answer = "",
         num_blanks = 0,
-        li_a_types = [],
-        li_a_tenses = [],
         num_answers = 0,
-        li_a_serials = []
+        li_a_cats = [10,24,1988],
+        li_a_tenses = [],
+        li_a_serials = [],
+        str_a_cats = "",
+        str_a_tenses = "",
+        str_a_serials = ""
         ):
 
         self.objectId = objectId       
@@ -145,13 +158,18 @@ class _Question(Object):
         self.serial = get_serial(n = self.num, length_desired = 5)
         self.ID = get_id(prefix=self.__class__.__name__[1:], serial=self.serial) 
         self.text = text
-        self.img = img
+        self.image = image
         self.category = category
+        self.real_answer = real_answer
         self.num_blanks = num_blanks
-        self.li_a_types = li_a_types
-        self.li_a_tenses = li_a_tenses
         self.num_answers = num_answers
+        self.li_a_cats = li_a_cats
+        self.li_a_tenses = li_a_tenses
         self.li_a_serials = li_a_serials
+        self.str_a_cats = str_a_cats
+        self.str_a_tenses = str_a_tenses
+        self.str_a_serials = str_a_serials
+        self.li_attr = _Question.LI_ATTR
 
         _Question.NUM += 1
 
@@ -163,13 +181,17 @@ class _Question(Object):
             serial = self.serial,
             ID = self.ID,
             text = self.text,
-            img = self.img,
+            image = self.image,
             category = self.category,
             num_blanks = self.num_blanks,
-            li_a_types = self.li_a_types,
-            li_a_tenses = self.li_a_tenses,
             num_answers = self.num_answers,
-            li_a_serials = self.li_a_serials
+            li_a_cats = self.li_a_cats,
+            li_a_tenses = self.li_a_tenses,
+            li_a_serials = self.li_a_serials,
+            str_a_cats = self.str_a_serials,
+            str_a_tenses = self.str_a_tenses,
+            str_a_serials = self.str_a_serials,
+            li_attr = self.li_attr
             )
 
     def __iter__(self):
@@ -199,7 +221,7 @@ def get_id(prefix, serial):
 
 
 # Make Question objects by reading <my_questions.txt>.
-def make_questions(filename = "/Users/achick/Google_Drive_Alex/Daeious/Development/Q___Question_Answer_sets/Questions_and_Answers/my_questions/my_questions.txt"):
+def make_questions(filename = "/Users/achick/Google_Drive_Alex/Daeious/ParseCloudCode/cloud/my_questions/my_questions.txt"):
     # Get rid of newline chars ("\n").
     lines = [line.strip('\n') for line in open(filename) if line[0] != "#" and line != "\n"]
     # For now, get rid of anything in parentheses.
