@@ -50,4 +50,55 @@ curl -X PUT -d '{
 
 
 
+// test connecting to a CloudCode Webhook function defined in server.js
+curl -X POST \
+  -H "X-Parse-Application-Id: AKJFNWcTcG6MUeMt1DAsMxjwU62IJPJ8agbwJZDJ" \
+  -H "X-Parse-REST-API-Key: i8o0t6wg9GOTly0yaApY2c1zZNMvOqNhoWNuzHUS" \
+  -H "X-Parse-Master-Key: LbaxSV6u64DRUKxdtQphpYQ7kiaopBaRMY1PgCsv" \
+  -H "Content-Type: application/json" \
+  -d '' \
+  https://api.parse.com/1/functions/addNumbers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

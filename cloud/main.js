@@ -65,6 +65,22 @@ Parse.Cloud.define("print_from_Firebase", function(request, response) {
     })
 })
 
+Parse.Cloud.define("test_connecting_to_heroku", function (request, response) {
+    Parse.Cloud.httpRequest({
+            url: "https://daeious-dev.herokuapp.com/",
+        success: function(httpResponse) {
+            response.success(httpResponse.text); // {"result":"\"True\""}
+        },
+        error: function(error) {
+            response.error(error);
+        }
+    })
+});
+
+
+
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
