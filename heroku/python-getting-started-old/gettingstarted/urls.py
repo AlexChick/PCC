@@ -13,6 +13,5 @@ urlpatterns = patterns('',
     url(r'^$', hello.views.index, name='index'),
     url(r'^db', hello.views.db, name='db'),
     url(r'^admin/', include(admin.site.urls)),
-
     url(r'^update_in_Parse', hello.views.update_in_Parse, name = 'update_in_Parse')
 )

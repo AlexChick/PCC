@@ -174,8 +174,6 @@ Parse.Cloud.define("update_in_Firebase", function (request, response) {
 
 
 
-
-
 // Log in, then do several asynchronous tasks.
 Parse.Cloud.define("copy_to_Firebase", function (request, response) {
     //  (0) Log in.
@@ -220,18 +218,6 @@ Parse.Cloud.define("copy_to_Firebase", function (request, response) {
         response.error(error);
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -289,11 +275,384 @@ Parse.Cloud.define("copy_to_Firebase", function (request, response) {
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+/*
+
+button_tapped
+    setup_event
+    check_in
+        create_a_daeious_account
+        register_for_this_event
+        arrive_at_this_event
+    start_event
+    practice
+        make_practice
+        start_practice
+        end_practice
+    make_round
+        make_r1
+        make_r2
+        make_r3
+    start_round
+        start_r1
+        start_r2
+        start_r3
+    end_round
+        end_r1
+        end_r2
+        end_r3
+    end_event
+    teardown_event
+
+check_params
+
+*/
+
+
+function button_tapped (params) {
+
+    // params MUST include reason, event_num
+    if (!params_are_valid(f_name = "button_tapped", f_params = params)) {
+        return false;
+    } else {
+        console.log("Button in Config App was tapped with valid params: " + params);
+    }
+
+    // set vars from <params>
+    var reason = params.reason;
+    var event_num = params.event_num;
+
+    // use a switch on <reason> to call the desired function
+    switch (reason) {
+
+        case "setup_event":                             // 1
+            setup_event(event_num = event_num);
+            break;
+
+        case "create_a_daeious_account":                // 3
+        case "register_for_this_event":                 // 4
+        case "arrive_at_this_event":                    // 5
+            check_in(command = reason);
+            break;
+
+        case "start_event":                             // 6
+            start_event();
+            break;
+
+        case "make_practice":
+        case "start_practice":                          // 7
+        case "end_practice":                            // 8
+            practice(command = reason.split('_')[0]);
+            break;
+
+        case "make_r1":                                 // 9
+        case "make_r2":                                 // 10
+        case "make_r3":                                 // 11
+            make_round(r_num = +reason.slice(-1));
+            break;
+
+        case "start_r1":                                // 12
+        case "start_r2":                                // 13
+        case "start_r3":                                // 14
+            start_round(r_num = +reason.slice(-1));
+            break;
+
+        case "end_r1":                                  // 15
+        case "end_r2":                                  // 16
+        case "end_r3":                                  // 17
+            end_round(r_num = +reason.slice(-1));
+            break;
+
+        case "end_event":                               // 18
+            end_event();
+            break;
+
+        case "teardown_event":                          // 19
+            teardown_event();
+            break;
+
+        default:
+            break;
+    }
+    return true;
+}
+
+function check_params (params) {
+    if (params == null) {
+        console.log("ERROR: <params> not provided or doesn't exist");
+        return false;
+    }
+    if (params.function_name == null) {
+        console.log("ERROR: <function_name> not provided or doesn't exist");
+        return false;
+    }
+    switch (params.function_name) {
+
+
+        /* JavaScript Functions */
+
+        case "setup_event":
+            // check params; return false if incorrect
+            break;
+
+        case "check_in":
+            // check params; return false if incorrect
+            break;
+
+        case "create_a_daeious_account":
+            // check params; return false if incorrect
+            break;
+
+        case "register_for_this_event":
+            // check params; return false if incorrect
+            break;
+
+        case "arrive_at_this_event":
+            // check params; return false if incorrect
+            break;
+
+        case "start_event":
+            // check params; return false if incorrect
+            break;
+
+        case "practice":
+            // check params; return false if incorrect
+            break;
+
+        case "make_practice":
+            // check params; return false if incorrect
+            break;        
+
+        case "start_practice":
+            // check params; return false if incorrect
+            break;
+
+        case "end_practice":
+            // check params; return false if incorrect
+            break;
+
+        case "make_round":
+            // check params; return false if incorrect
+            break;
+
+        case "make_r1":
+        case "make_r2":
+        case "make_r3":
+            // check params; return false if incorrect
+            break;
+
+        case "start_round":
+            // check params; return false if incorrect
+            break;
+
+        case "start_r1":
+        case "start_r2":
+        case "start_r3":
+            // check params; return false if incorrect
+            break;
+
+        case "end_round":
+            // check params; return false if incorrect
+            break;
+
+        case "end_r1":
+        case "end_r2":
+        case "end_r3":
+            // check params; return false if incorrect
+            break;
+
+        case "end_event":
+            // check params; return false if incorrect
+            break;
+
+        case "teardown_event":
+            // check params; return false if incorrect
+            break;
+
+
+        /* Parse Cloud Code Functions */
+
+        default:
+            console.log("ERROR: Incorrect function_name provided");
+            return false;
+    }
+}
 
 
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+/* 
+
+1st-level Functions
+
+setup_event
+check_in
+start_event
+practice
+make_round
+start_round
+end_round
+end_event
+teardown_event
+
+*/
+
+function setup_event (params) {
+    return true;
+}
+
+function check_in (params) {
+    if (params.command == "create_a_daeious_account") {
+        create_a_daeious_account(params);
+        register_for_this_event(params);
+        arrive_at_this_event(params);
+    } else if (params.command == "register_for_this_event") {
+        register_for_this_event(params);
+        arrive_at_this_event(params);
+    } else if (params.command == "arrive_at_this_event") {
+        arrive_at_this_event(params);
+    }
+    return true;
+}
+
+function start_event (params) {
+    return true;
+}
+
+function practice (params) {
+    return true;
+}
+
+function make_round (params) {
+    return true;
+}
+
+function start_round (params) {
+    return true;
+}
+
+function end_round (params) {
+    return true;
+}
+
+function end_event (params) {
+    return true;
+}
+
+function close_event (params) {
+    return true;
+}
 
 
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+/* 
+
+2nd-level Functions
+
+    create_a_daeious_account
+    register_for_this_event
+    arrive_at_this_event
+    make_practice
+    start_practice
+    end_practice
+    make_r1
+    make_r2
+    make_r3
+    start_r1
+    start_r2
+    start_r3
+    end_r1
+    end_r2
+    end_r3
+
+*/
+
+function create_a_daeious_account (params) {
+    return true;
+}
+
+function register_for_this_event (params) {
+    return true;
+}
+
+function arrive_at_this_event (params) {
+    return true;
+}
+
+function make_practice (params) {
+    return true;
+}
+
+function start_practice (params) {
+    return true;
+}
+
+function end_practice (params) {
+    return true;
+}
+
+function make_r1 (params) {
+    return true;
+}
+
+function make_r2 (params) {
+    return true;
+}
+
+function make_r3 (params) {
+    return true;
+}
+
+function start_r1 (params) {
+    return true;
+}
+
+function start_r2 (params) {
+    return true;
+}
+
+function start_r3 (params) {
+    return true;
+}
+
+function end_r1 (params) {
+    return true;
+}
+
+function end_r2 (params) {
+    return true;
+}
+
+function end_r3 (params) {
+    return true;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+/* 
+
+Cloud Code Functions
+
+*/
 
 
 

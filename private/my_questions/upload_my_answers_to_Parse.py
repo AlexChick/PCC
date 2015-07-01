@@ -41,6 +41,9 @@ Instance members of an _Answer():
     ID
     text
     image
+    image_num
+    image_url
+    image_source
     category
     li_tags
     tense
