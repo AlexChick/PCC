@@ -57,7 +57,7 @@ curl -X POST \
   -H "X-Parse-Master-Key: LbaxSV6u64DRUKxdtQphpYQ7kiaopBaRMY1PgCsv" \
   -H "Content-Type: application/json" \
   -d '' \
-  https://api.parse.com/1/functions/addNumbers
+  https://api.parse.com/1/functions/test_connecting_to_heroku
 
 
 
